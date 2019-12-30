@@ -1,6 +1,7 @@
 import sys
 import re
 import io
+import pdfminer
 from pdfminer.converter import TextConverter
 from pdfminer.pdfinterp import PDFPageInterpreter
 from pdfminer.pdfinterp import PDFResourceManager
@@ -8,9 +9,12 @@ from pdfminer.pdfpage import PDFPage
 
 
 def extract_text(file_path):
+    laparams = pdfminer.layout.LAParams()
+    setattr(laparams, 'all_texts', True)
+
     resource_manager = PDFResourceManager()
     fake_file_handle = io.StringIO()
-    converter = TextConverter(resource_manager, fake_file_handle)
+    converter = TextConverter(resource_manager, fake_file_handle, laparams=laparams)
     page_interpreter = PDFPageInterpreter(resource_manager, converter)
 
     with open(file_path, 'rb') as fh:
@@ -30,6 +34,7 @@ def extract_text(file_path):
 
 
 def extract_references_list(text):
+    print(text)
     matching_result = re.search('REFERENCES', text)
     references_text = text[matching_result.span()[0]:]
     #print(references_text)
