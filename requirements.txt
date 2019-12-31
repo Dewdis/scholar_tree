@@ -1,1 +1,5 @@
+# extract text from pdf
 pdfminer
+
+# useful development utilities
+pycodestyle

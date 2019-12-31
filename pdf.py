@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+
+
 import sys
 import re
 import io
@@ -14,7 +17,9 @@ def extract_text(file_path):
 
     resource_manager = PDFResourceManager()
     fake_file_handle = io.StringIO()
-    converter = TextConverter(resource_manager, fake_file_handle, laparams=laparams)
+    converter = TextConverter(resource_manager,
+                              fake_file_handle,
+                              laparams=laparams)
     page_interpreter = PDFPageInterpreter(resource_manager, converter)
 
     with open(file_path, 'rb') as fh:
@@ -33,22 +38,6 @@ def extract_text(file_path):
         return text
 
 
-def extract_references_list(text):
-    print(text)
-    matching_result = re.search('REFERENCES', text)
-    references_text = text[matching_result.span()[0]:]
-    #print(references_text)
-    # WARNING: not more than 999 references!
-    index_re = re.compile('\[[0-9]([0-9]|)([0-9]|)\]')
-    references_positions = []
-    for reference in index_re.finditer(references_text):
-        references_positions.append(reference.span()[0])
-    references_positions.append(len(references_text))
-    for i in range(len(references_positions)-1):
-        print(references_text[references_positions[i]:references_positions[i+1]])
-
-
 if __name__ == '__main__':
     text = extract_text(sys.argv[1])
-    #print(text)
-    extract_references_list(text)
+    # print(text)
